@@ -1,17 +1,20 @@
-import {ParamListBase} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useState} from 'react';
+import { ParamListBase } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from 'react-native';
 import globalStyles from '../Styles/globalStyles';
-import {black, blue, white, yellow} from '../Constants/ColorScheme';
-import {navigateToRouteWithReset} from '../Utils/navigateTo';
-import {DASHBOARDSCREEN} from '../Constants/Navigations';
+import { black, blue, white, yellow } from '../Constants/ColorScheme';
+import { navigateToRouteWithReset } from '../Utils/navigateTo';
+import { DASHBOARDSCREEN } from '../Constants/Navigations';
+import OTPField from '../Component/OTPField';
+import {requestLocationPermission} from '../Utils/requests';
 
 interface LoginScreenProps {
   navigation: StackNavigationProp<ParamListBase, string>;
@@ -20,36 +23,149 @@ interface LoginScreenProps {
 const LoginScreen = (props: LoginScreenProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [stepsForLogin, setStepsForLogin] = useState<number>(0);
+  const [otp, setOtp] = useState('');
+  const [timer, setTimer] = useState(30);
+  const [isTimerVisible, setIsTimerVisible] = useState(false);
+  const [isResendDisabled, setIsResendDisabled] = useState(false);
+  const [dialogShown, setDialogShown] = useState(false);
+  const [otpToVerify, setOtpToVerify] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+
   const handleLogin = () => {
-    setTimeout(() => {
-      navigateToRouteWithReset(DASHBOARDSCREEN, props.navigation);
-    });
+    setStepsForLogin(1);
   };
-  return (
-    <View style={globalStyles.screenContainer}>
-      <View style={[globalStyles.screenSection, loginStyles.loginSection]}>
-        <Text style={loginStyles.titleTextStyle}>
-          Continue with Mobile Number
-        </Text>
-        <Text style={loginStyles.textStyle}>
-          OTP will be sent to the number
-        </Text>
-        <TextInput
-          style={loginStyles.inputStyle}
-          defaultValue={'+91'}
-          keyboardType="phone-pad"
-          // onChangeText={(number: any) => {
-          //   this.setState({ phoneNumber: number });
-          //   console.log(this.state.phoneNumber);
-          // }}
-        />
-        <TouchableOpacity style={loginStyles.buttonStyle} onPress={handleLogin}>
-          <Text style={loginStyles.buttonTextStyle}>Send OTP</Text>
-        </TouchableOpacity>
+  const handleOTP = async () => {
+    setStepsForLogin(2);
+    const locationPermissionGranted = await requestLocationPermission();
+    if (locationPermissionGranted) {
+      navigateToRouteWithReset(DASHBOARDSCREEN, props.navigation);
+    } else {
+      setErrorMessage('Location is not enabled. Please enable it from settings.');
+    }
+  }
+
+  const handleResendClick = () => {
+    if (!isResendDisabled) {
+      setIsTimerVisible(true);
+      setIsResendDisabled(true);
+      setTimer(30);
+    }
+    // const timeLeft = timer;
+    Alert.alert(
+      'Reset Button Disabled',
+      `Please wait for 30 seconds before trying again.`,
+      [
+        {
+          text: 'OK',
+          onPress: () => { },
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+
+  };
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+
+    if (isTimerVisible) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer === 1) {
+            clearInterval(interval);
+            setIsTimerVisible(false);
+            setIsResendDisabled(false);
+          }
+          return prevTimer - 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [isTimerVisible]);
+
+  switch (stepsForLogin) {
+    case 0:
+      return (
+        <View style={globalStyles.screenContainer}>
+          <View style={[globalStyles.screenSection, loginStyles.loginSection]}>
+            <Text style={loginStyles.titleTextStyle}>
+              Continue with Mobile Number
+            </Text>
+            <Text style={loginStyles.textStyle}>
+              OTP will be sent to the number
+            </Text>
+            <TextInput
+              style={loginStyles.inputStyle}
+              defaultValue={'+91'}
+              keyboardType="phone-pad"
+            // onChangeText={(number: any) => {
+            //   this.setState({ phoneNumber: number });
+            //   console.log(this.state.phoneNumber);
+            // }}
+            />
+            <TouchableOpacity style={loginStyles.buttonStyle} onPress={handleLogin}>
+              <Text style={loginStyles.buttonTextStyle}>Send OTP</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    case 1:
+      return (
+        <View style={globalStyles.screenContainer}>
+          <View style={[globalStyles.screenSection, loginStyles.loginSection]}>
+            <Text style={loginStyles.titleTextStyle}>
+              Enter the OTP
+            </Text>
+            <Text style={loginStyles.textStyle}>
+              We have sent an OTP to +91 999999999
+            </Text>
+            <OTPField
+              otp={otpToVerify}
+              setOtp={(otp: any) => {
+                setOtpToVerify(otp);
+              }}
+            />
+            <View style={loginStyles.container}>
+              <TouchableOpacity
+                style={loginStyles.resendButton}
+                onPress={handleResendClick}
+                disabled={isResendDisabled}
+              >
+                <Text style={[loginStyles.resendText, { color: isResendDisabled ? 'gray' : 'blue' }]}>
+                  {isTimerVisible ? `Resend OTP` : 'Resend OTP'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={loginStyles.buttonStyle} onPress={handleOTP}>
+              <Text style={loginStyles.buttonTextStyle}>Verify</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    // case 2:  is to make a screen seeking for the request permission for location
+    // if there is permission directly jums to dashboard else ask for permission until get access
+    case 2:
+      return (
+        <View style={globalStyles.screenContainer}>
+        <View style={[globalStyles.screenSection, loginStyles.loginSection]}>
+        {errorMessage ? (
+          <View style={loginStyles.errorMessageContainer}>
+            <Text style={loginStyles.errorMessageText}>{errorMessage}</Text>
+          </View>
+        ) : null}
+        </View>
       </View>
-    </View>
-  );
+      );
+  }
 };
+
+
 const loginStyles = StyleSheet.create({
   loginContainer: {
     flex: 1,
@@ -118,6 +234,29 @@ const loginStyles = StyleSheet.create({
     paddingLeft: '80%',
     color: blue,
     fontSize: 16,
+  },
+  container: {
+    alignSelf: 'flex-end',
+  },
+  resendButton: {
+    // paddingTop: 10,
+    paddingEnd: 20,
+  },
+  resendText: {
+    color: 'blue',
+    // alignSelf: 'flex-end',
+  },
+  errorMessageContainer: {
+    marginTop: 0,
+    padding: 10,
+    marginEnd: 20,
+    backgroundColor: 'red',
+    borderRadius: 5,
+  },
+  errorMessageText: {
+    color: 'white',
+    fontSize: 18 ,
+    textAlign: 'center',
   },
 });
 

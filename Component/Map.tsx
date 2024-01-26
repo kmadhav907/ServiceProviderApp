@@ -1,8 +1,8 @@
-import {ParamListBase} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import { ParamListBase } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useState } from 'react';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import {
   HEIGHT,
   LATITUDE_DELTA,
@@ -28,7 +28,13 @@ const Map = (props: MapProps) => {
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA,
         }}
-        zoomControlEnabled={false}></MapView>
+        zoomControlEnabled={false}>
+        <Marker coordinate={{
+          latitude: props.latitude,
+          longitude: props.longitude,
+        }}>
+        </Marker>
+      </MapView>
     </SafeAreaView>
   );
 };
