@@ -1,5 +1,11 @@
 import React, {useContext, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Map from '../Component/Map';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ParamListBase} from '@react-navigation/native';
@@ -13,15 +19,12 @@ import {TimePicker, ValueMap} from 'react-native-simple-time-picker';
 import {FIXIT_LEFT_TO_NOTIFICATION} from '../Constants/Status';
 import {navigateToRouteWithReset} from '../Utils/navigateTo';
 import Modal from 'react-native-modal';
+import {ETATime} from '../Types/TimeTypes';
 
 interface MapRouteProp {
   navigation: StackNavigationProp<ParamListBase, string>;
 }
-interface ETATime {
-  hours: number;
-  minutes: number;
-  seconds: number;
-}
+
 const MapRouteScreen = (props: MapRouteProp) => {
   const [showETAModel, setShowETAModel] = useState<boolean>(false);
   const [etaTime, setEtaTime] = useState<ETATime>({
@@ -40,13 +43,17 @@ const MapRouteScreen = (props: MapRouteProp) => {
     setEtaTime({...etaTime, hours: value.hours, minutes: value.minutes});
   };
   const navigateToETA = () => {
-    setCurrentNotification({
-      ...currentNotification,
-      stepsToNavigate: ETASCREEN,
-      fixitStatus: FIXIT_LEFT_TO_NOTIFICATION,
-      etaTime: {...etaTime},
-    });
-    navigateToRouteWithReset(ETASCREEN, props.navigation);
+    if (etaTime.hours > 0 || (etaTime.hours === 0 && etaTime.minutes > 0)) {
+      setCurrentNotification({
+        ...currentNotification,
+        stepsToNavigate: ETASCREEN,
+        fixitStatus: FIXIT_LEFT_TO_NOTIFICATION,
+        etaTime: {...etaTime},
+      });
+      navigateToRouteWithReset(ETASCREEN, props.navigation);
+    } else {
+      ToastAndroid.show('Please add hours', ToastAndroid.SHORT);
+    }
   };
 
   return (
