@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 
 import Map from '../Component/Map';
+import Model from '../Component/Model';
 
 interface ETAScreenProps {
   navigation: StackNavigationProp<ParamListBase, string>;
@@ -27,6 +28,15 @@ const ETAScreen = (props: ETAScreenProps) => {
     seconds: 5,
   });
   const [showNextModal, setShowNextModal] = useState<boolean>(false);
+  const [modalDrawer, setModalDrawer] = useState<boolean>(false);
+
+  const handleOpenModal = () => {
+      setModalDrawer(true);
+  };
+
+  const toggleDrawer = () => {
+      setModalDrawer(!modalDrawer);
+  };
   useEffect(() => {
     if (currentNotification.etaTime) {
       setEtaTime(currentNotification.etaTime);
@@ -81,9 +91,12 @@ const ETAScreen = (props: ETAScreenProps) => {
   return (
     <View style={[globalStyles.screenContainer, {backgroundColor: white}]}>
       <View style={etaStyles.iconContainer}>
-        <TouchableOpacity>
-          <Icon name="align-justify" color={black} size={24} />
-        </TouchableOpacity>
+      <Model modalDrawer={modalDrawer} toggleDrawer={toggleDrawer} navigation={props.navigation} />
+        <View style={etaStyles.iconContainerMenu}>
+            <TouchableOpacity onPress={handleOpenModal}>
+                <Icon name="align-justify" color={black} size={24} />
+            </TouchableOpacity>
+        </View>
       </View>
       {showNextModal && (
         <Modal isVisible={showNextModal}>
@@ -199,6 +212,15 @@ const etaStyles = StyleSheet.create({
     padding: 10,
     width: WIDTH,
   },
+  iconContainerMenu: {
+    position: 'absolute',
+    top: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    width: WIDTH,
+},
   modalContent: {
     padding: 5,
     backgroundColor: yellow,

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,23 +6,26 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Modal from 'react-native-modal';
+
 import globalStyles from '../Styles/globalStyles';
 import Map from '../Component/Map';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {ParamListBase} from '@react-navigation/native';
-import {black, white} from '../Constants/ColorScheme';
-import {WIDTH} from '../Constants/Dimensions';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { ParamListBase } from '@react-navigation/native';
+import { black, white, yellow } from '../Constants/ColorScheme';
+import { HEIGHT, WIDTH } from '../Constants/Dimensions';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ToggleSwitch from 'toggle-switch-react-native';
-import {requestLocationPermission} from '../Utils/requests';
-import {Cordinates} from '../Types/LocationTypes';
+import { requestLocationPermission } from '../Utils/requests';
+import { Cordinates } from '../Types/LocationTypes';
 import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
 import Notifications from '../Component/Notifications';
 import {notifications} from '../Constants/Data';
 import Loader from '../Component/Loader';
+import { useNavigation } from '@react-navigation/native';
+
+import Model from '../Component/Model';
 
 interface DashboardScreenProps {
   navigation: StackNavigationProp<ParamListBase, string>;
@@ -32,6 +35,16 @@ const DashboardScreen = (props: DashboardScreenProps) => {
   const [currentCords, setCurrentCords] = useState<Cordinates | null>(null);
   const [userStatus, setUserStatus] = useState<boolean>(true);
   const [modalDrawer, setModalDrawer] = useState<boolean>(false);
+
+  // const navigation = useNavigation();
+
+  const handleOpenModal = () => {
+    setModalDrawer(true);
+  };
+
+  const toggleDrawer = () => {
+    setModalDrawer(!modalDrawer);
+  };
 
   useEffect(() => {
     let watchId: number;
@@ -74,12 +87,7 @@ const DashboardScreen = (props: DashboardScreenProps) => {
       Geolocation.clearWatch(watchId);
     };
   }, []);
-  const handleOpenModal = () => {
-    setModalDrawer(true);
-  };
-  const toggleDrawer = () => {
-    setModalDrawer(false);
-  };
+
   return (
     <>
       {!currentCords ? (
@@ -88,20 +96,7 @@ const DashboardScreen = (props: DashboardScreenProps) => {
         </View>
       ) : (
         <View style={globalStyles.screenContainer}>
-          {modalDrawer && (
-            <Modal
-              isVisible={modalDrawer}
-              animationIn="slideInLeft"
-              animationOut="slideOutLeft"
-              onBackButtonPress={toggleDrawer}
-              style={dashboardStyles.modalStyle}
-              hideModalContentWhileAnimating
-              onBackdropPress={toggleDrawer}
-              useNativeDriver
-              swipeDirection="left">
-              <SafeAreaView></SafeAreaView>
-            </Modal>
-          )}
+          <Model modalDrawer={modalDrawer} toggleDrawer={toggleDrawer} navigation={props.navigation} />
           <View style={dashboardStyles.iconContainer}>
             <TouchableOpacity onPress={handleOpenModal}>
               <Icon name="align-justify" color={black} size={24} />
@@ -111,7 +106,7 @@ const DashboardScreen = (props: DashboardScreenProps) => {
               isOn={userStatus}
               onColor={white}
               offColor={black}
-              thumbOnStyle={{backgroundColor: black}}
+              thumbOnStyle={{ backgroundColor: black }}
               onToggle={status => {
                 setUserStatus(status);
               }}
@@ -160,6 +155,7 @@ const DashboardScreen = (props: DashboardScreenProps) => {
 };
 
 const dashboardStyles = StyleSheet.create({
+  
   dashboardContent: {
     padding: 0,
     paddingTop: 0,
@@ -211,5 +207,6 @@ const dashboardStyles = StyleSheet.create({
     fontWeight: '700',
     color: black,
   },
+
 });
 export default DashboardScreen;
