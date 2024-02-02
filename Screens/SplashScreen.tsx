@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
 import globalStyles from '../Styles/globalStyles';
 import {navigateToRouteWithReset} from '../Utils/navigateTo';
@@ -7,6 +7,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {ParamListBase} from '@react-navigation/native';
 import {HEIGHT} from '../Constants/Dimensions';
 import {black, yellow} from '../Constants/ColorScheme';
+import CurrentNotificationContext from '../Context/CurrentNotificationContext';
 const splashViewImage = require('../Assets/SplashScreen.png');
 
 interface SplashScreenProps {
@@ -17,10 +18,18 @@ let SPLASHSCREENTIMEOUT: number = 3000;
 
 const SplashScreen = (props: SplashScreenProps) => {
   const [animating, setAnimating] = useState<boolean>(true);
+  const {currentNotification} = useContext(CurrentNotificationContext);
   let timeout: NodeJS.Timeout;
   useEffect(() => {
     timeout = setTimeout(() => {
-      navigateToRouteWithReset(LOGINSCREEN, props.navigation);
+      if (currentNotification.stepsToNavigate) {
+        navigateToRouteWithReset(
+          currentNotification.stepsToNavigate,
+          props.navigation,
+        );
+      } else {
+        navigateToRouteWithReset(LOGINSCREEN, props.navigation);
+      }
     }, SPLASHSCREENTIMEOUT);
     return () => {
       clearTimeout(timeout);

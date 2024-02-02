@@ -20,6 +20,9 @@ import {Cordinates} from '../Types/LocationTypes';
 import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
+import Notifications from '../Component/Notifications';
+import {notifications} from '../Constants/Data';
+import Loader from '../Component/Loader';
 
 interface DashboardScreenProps {
   navigation: StackNavigationProp<ParamListBase, string>;
@@ -80,8 +83,8 @@ const DashboardScreen = (props: DashboardScreenProps) => {
   return (
     <>
       {!currentCords ? (
-        <View>
-          <Text>Need Location Access</Text>
+        <View style={globalStyles.screenContainer}>
+          <Loader />
         </View>
       ) : (
         <View style={globalStyles.screenContainer}>
@@ -114,21 +117,42 @@ const DashboardScreen = (props: DashboardScreenProps) => {
               }}
               size="medium"></ToggleSwitch>
           </View>
-          <View
-            style={[
-              globalStyles.screenSection,
-              dashboardStyles.dashboardContent,
-            ]}>
-            <View style={dashboardStyles.headerSection}>
-              <Icon name="circle" color="green" />
-              <Text style={dashboardStyles.headerTitle}>Place Name</Text>
-            </View>
-            <Map
-              latitude={currentCords.latitude}
-              longitude={currentCords.longitude}
-              navigation={props.navigation}
-            />
-          </View>
+          <>
+            {userStatus ? (
+              <View
+                style={[
+                  globalStyles.screenSection,
+                  dashboardStyles.dashboardContent,
+                ]}>
+                <View style={dashboardStyles.headerSection}>
+                  <Icon name="circle" color="green" />
+                  <Text style={dashboardStyles.headerTitle}>Place Name</Text>
+                </View>
+                <Map
+                  latitude={currentCords.latitude}
+                  longitude={currentCords.longitude}
+                  navigation={props.navigation}
+                />
+                <View style={dashboardStyles.notificationContainer}>
+                  <Notifications
+                    notifications={notifications}
+                    navigation={props.navigation}
+                    setSelectedRegion={() => {}}
+                  />
+                </View>
+              </View>
+            ) : (
+              <View
+                style={[
+                  globalStyles.screenSection,
+                  dashboardStyles.dashboardContent,
+                ]}>
+                <Text style={dashboardStyles.offlineText}>
+                  You are offline!
+                </Text>
+              </View>
+            )}
+          </>
         </View>
       )}
     </>
@@ -169,13 +193,23 @@ const dashboardStyles = StyleSheet.create({
   },
   modalStyle: {
     width: WIDTH * 0.75,
-    // backgroundColor: "#f9d342",
     backgroundColor: 'black',
     color: 'white',
     margin: 0,
     flex: 1,
     borderTopRightRadius: 15,
     // borderBottomRightRadius: 15,
+  },
+  notificationContainer: {
+    position: 'absolute',
+    bottom: 10,
+    width: WIDTH,
+    alignItems: 'center',
+  },
+  offlineText: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: black,
   },
 });
 export default DashboardScreen;

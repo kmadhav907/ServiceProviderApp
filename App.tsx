@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import 'react-native-gesture-handler';
 import {
   KeyboardAvoidingView,
@@ -7,15 +7,30 @@ import {
   StyleSheet,
 } from 'react-native';
 import Navigators from './Navigators/Navigations';
+import CurrentNotificationContext from './Context/CurrentNotificationContext';
+import {NO_NOTIFICATION_SELECTED} from './Constants/Status';
 
 const App = () => {
+  const [currentNotification, setCurrentNotification] = useState({
+    stepsToNavigate: '',
+    latitude: 0,
+    longitude: 0,
+    fixitStatus: NO_NOTIFICATION_SELECTED,
+    etaTime: null,
+  });
   return (
     <KeyboardAvoidingView
       style={styles.backgroundStyle}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <SafeAreaView style={styles.container}>
-        <Navigators/>
-      </SafeAreaView>
+      <CurrentNotificationContext.Provider
+        value={{
+          currentNotification,
+          setCurrentNotification,
+        }}>
+        <SafeAreaView style={styles.container}>
+          <Navigators />
+        </SafeAreaView>
+      </CurrentNotificationContext.Provider>
     </KeyboardAvoidingView>
   );
 };
