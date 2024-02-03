@@ -3,14 +3,14 @@ import SplashScreen from '../Screens/SplashScreen';
 import DashboardScreen from '../Screens/DashboardScreen';
 import LoginScreen from '../Screens/LoginScreen';
 import MapRouteScreen from '../Screens/MapRouteScreen';
-import Profile from '../Component/Profile';
+import ProfileScreen from '../Screens/ProfileScreen';
 import {
   DASHBOARDSCREEN,
   ETASCREEN,
   LOGINSCREEN,
   MAPROUTERSCREEN,
   SPLASHSCREEN,
-  PROFILE,
+  PROFILESCREEN,
 } from '../Constants/Navigations';
 import {NavigationContainer, ParamListBase} from '@react-navigation/native';
 import ETAScreen from '../Screens/ETAScreen';
@@ -45,10 +45,10 @@ function Navigators() {
           name={ETASCREEN}
           component={ETAScreen}
           options={{headerShown: false}}
-          />
+        />
         <Stack.Screen
-          name={PROFILE}
-          component={Profile}
+          name={PROFILESCREEN}
+          component={ProfileScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

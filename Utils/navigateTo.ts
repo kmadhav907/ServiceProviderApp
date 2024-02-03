@@ -4,7 +4,7 @@ export const navigateToRouteWithoutReset = (
   routeName: string,
   navigation: any,
 ) => {
-  navigation.navigate(routeName);
+  navigation.push(routeName);
 };
 
 export const navigateToRouteWithReset = (

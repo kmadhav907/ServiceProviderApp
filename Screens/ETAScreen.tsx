@@ -5,7 +5,7 @@ import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import CurrentNotificationContext from '../Context/CurrentNotificationContext';
 import {ETATime} from '../Types/TimeTypes';
 import {navigateToRouteWithReset} from '../Utils/navigateTo';
-import {DASHBOARDSCREEN} from '../Constants/Navigations';
+import {BILLINGSCREEN, DASHBOARDSCREEN} from '../Constants/Navigations';
 import globalStyles from '../Styles/globalStyles';
 import {HEIGHT, WIDTH} from '../Constants/Dimensions';
 import {black, white, yellow} from '../Constants/ColorScheme';
@@ -14,6 +14,7 @@ import Modal from 'react-native-modal';
 
 import Map from '../Component/Map';
 import Model from '../Component/Model';
+import {FIXIT_REACHED_TO_NOTIFICATION} from '../Constants/Status';
 
 interface ETAScreenProps {
   navigation: StackNavigationProp<ParamListBase, string>;
@@ -31,11 +32,11 @@ const ETAScreen = (props: ETAScreenProps) => {
   const [modalDrawer, setModalDrawer] = useState<boolean>(false);
 
   const handleOpenModal = () => {
-      setModalDrawer(true);
+    setModalDrawer(true);
   };
 
   const toggleDrawer = () => {
-      setModalDrawer(!modalDrawer);
+    setModalDrawer(!modalDrawer);
   };
   useEffect(() => {
     if (currentNotification.etaTime) {
@@ -88,14 +89,27 @@ const ETAScreen = (props: ETAScreenProps) => {
     }, 1000);
     return () => clearInterval(interval);
   }, [currentNotification.etaTime]);
+  const handleBillingScreen = () => {
+    clearInterval(interval);
+    setCurrentNotification({
+      ...currentNotification,
+      stepsToNavigate: BILLINGSCREEN,
+      fixitStatus: FIXIT_REACHED_TO_NOTIFICATION,
+    });
+    // navigateToRouteWithReset()
+  };
   return (
     <View style={[globalStyles.screenContainer, {backgroundColor: white}]}>
       <View style={etaStyles.iconContainer}>
-      <Model modalDrawer={modalDrawer} toggleDrawer={toggleDrawer} navigation={props.navigation} />
+        <Model
+          modalDrawer={modalDrawer}
+          toggleDrawer={toggleDrawer}
+          navigation={props.navigation}
+        />
         <View style={etaStyles.iconContainerMenu}>
-            <TouchableOpacity onPress={handleOpenModal}>
-                <Icon name="align-justify" color={black} size={24} />
-            </TouchableOpacity>
+          <TouchableOpacity onPress={handleOpenModal}>
+            <Icon name="align-justify" color={black} size={24} />
+          </TouchableOpacity>
         </View>
       </View>
       {showNextModal && (
@@ -125,7 +139,9 @@ const ETAScreen = (props: ETAScreenProps) => {
             />
           </View>
 
-          <TouchableOpacity style={etaStyles.btnAction}>
+          <TouchableOpacity
+            style={etaStyles.btnAction}
+            onPress={() => setShowNextModal(true)}>
             <Text style={etaStyles.btnText}>Reached</Text>
           </TouchableOpacity>
         </View>
@@ -220,7 +236,7 @@ const etaStyles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     width: WIDTH,
-},
+  },
   modalContent: {
     padding: 5,
     backgroundColor: yellow,
