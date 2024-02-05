@@ -89,14 +89,15 @@ const ETAScreen = (props: ETAScreenProps) => {
     }, 1000);
     return () => clearInterval(interval);
   }, [currentNotification.etaTime]);
+
   const handleBillingScreen = () => {
-    clearInterval(interval);
-    setCurrentNotification({
-      ...currentNotification,
-      stepsToNavigate: BILLINGSCREEN,
-      fixitStatus: FIXIT_REACHED_TO_NOTIFICATION,
-    });
-    // navigateToRouteWithReset()
+    // clearInterval(interval);
+    // setCurrentNotification({
+    //   ...currentNotification,
+    //   stepsToNavigate: BILLINGSCREEN,
+    //   fixitStatus: FIXIT_REACHED_TO_NOTIFICATION,
+    // });
+    navigateToRouteWithReset(BILLINGSCREEN,props.navigation)
   };
   return (
     <View style={[globalStyles.screenContainer, {backgroundColor: white}]}>
@@ -116,7 +117,7 @@ const ETAScreen = (props: ETAScreenProps) => {
         <Modal isVisible={showNextModal}>
           <View style={etaStyles.modalContent}>
             <Text style={etaStyles.modalTitle}>Do you want to continue?</Text>
-            <TouchableOpacity style={etaStyles.modalBtn}>
+            <TouchableOpacity style={etaStyles.modalBtn} onPress={handleBillingScreen}>
               <Text style={etaStyles.modalSubText}>Proceed</Text>
             </TouchableOpacity>
           </View>

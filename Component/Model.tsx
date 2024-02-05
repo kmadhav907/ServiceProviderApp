@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {WIDTH} from '../Constants/Dimensions';
 import {
-  navigateToRouteWithReset,
+  // navigateToRouteWithReset,
   navigateToRouteWithoutReset,
 } from '../Utils/navigateTo';
 import {DASHBOARDSCREEN, PROFILESCREEN} from '../Constants/Navigations';

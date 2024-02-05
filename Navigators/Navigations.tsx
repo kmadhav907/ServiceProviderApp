@@ -11,9 +11,11 @@ import {
   MAPROUTERSCREEN,
   SPLASHSCREEN,
   PROFILESCREEN,
+  BILLINGSCREEN,
 } from '../Constants/Navigations';
 import {NavigationContainer, ParamListBase} from '@react-navigation/native';
 import ETAScreen from '../Screens/ETAScreen';
+import BillingScreen from '../Screens/BillingScreen';
 
 const Stack = createStackNavigator<ParamListBase>();
 
@@ -49,6 +51,11 @@ function Navigators() {
         <Stack.Screen
           name={PROFILESCREEN}
           component={ProfileScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name={BILLINGSCREEN}
+          component={BillingScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

@@ -15,7 +15,7 @@ import globalStyles from '../Styles/globalStyles';
 import {ParamListBase} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Model from '../Component/Model';
-import {WIDTH} from '../Constants/Dimensions';
+import {HEIGHT, WIDTH} from '../Constants/Dimensions';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImagePicker, {
   ImageLibraryOptions,
@@ -147,7 +147,10 @@ const Profile = (props: ProfileProps) => {
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Workshop Address</Text>
             <TextInput
-              style={styles.input}
+              // row={2}
+              numberOfLines={4}
+              multiline={true}
+              style={styles.inputWorkshopAddress}
               onFocus={handleFocus}
               onBlur={handleBlur}
               value={workshopAddress}
@@ -177,6 +180,8 @@ const Profile = (props: ProfileProps) => {
 const styles = StyleSheet.create({
   loginSection: {
     backgroundColor: white,
+    // flex:1,
+    height: HEIGHT * 0.828,
   },
   profileIconContainer: {
     shadowColor: 'black',
@@ -224,6 +229,20 @@ const styles = StyleSheet.create({
     padding: 4,
     borderRadius: 4,
   },
+  inputWorkshopAddress:{
+    // height: 36,
+    width: 200,
+    borderColor: lightGray,
+    borderWidth: 1,
+    backgroundColor: lightGray,
+    fontSize: 16,
+    fontWeight: '600',
+    color: black,
+    padding: 4,
+    borderRadius: 4,
+    textAlignVertical:'top',
+  },
+
   checkbox: {
     alignSelf: 'center',
   },
@@ -255,12 +274,15 @@ const styles = StyleSheet.create({
     backgroundColor: yellow,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 40,
+    position:'absolute',
+    bottom:40,
+    // marginBottom: 10,
     width: WIDTH * 0.8,
     padding: 10,
     borderRadius: 5,
     elevation: 6,
     alignSelf: 'center',
+    // marginTop: 100,
   },
   buttonTextStyle: {
     color: black,
