@@ -12,10 +12,12 @@ import {
   SPLASHSCREEN,
   PROFILESCREEN,
   BILLINGSCREEN,
+  HISTORYSCREEN,
 } from '../Constants/Navigations';
 import {NavigationContainer, ParamListBase} from '@react-navigation/native';
 import ETAScreen from '../Screens/ETAScreen';
 import BillingScreen from '../Screens/BillingScreen';
+import HistoryScreen from '../Screens/HistoryScreen';
 
 const Stack = createStackNavigator<ParamListBase>();
 
@@ -56,6 +58,11 @@ function Navigators() {
         <Stack.Screen
           name={BILLINGSCREEN}
           component={BillingScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen 
+          name={HISTORYSCREEN}
+          component={HistoryScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

@@ -96,6 +96,9 @@ const Profile = (props: ProfileProps) => {
           <TouchableOpacity onPress={handleOpenModal}>
             <Icon name="align-justify" color={black} size={24} />
           </TouchableOpacity>
+          <View style={styles.historyHeaderContainer}>
+                <Text style={styles.historyHeaderText}>Profile</Text>
+          </View>
         </View>
         <View style={[globalStyles.screenSection, styles.loginSection]}>
           <TouchableOpacity
@@ -229,6 +232,16 @@ const styles = StyleSheet.create({
     padding: 4,
     borderRadius: 4,
   },
+  historyHeaderContainer:{
+    flex:1,
+    alignItems:'center',
+  },
+  historyHeaderText:{
+      fontSize:30,
+      fontWeight:'bold',
+      color:black,
+      textAlign: 'center', 
+  },
   inputWorkshopAddress:{
     // height: 36,
     width: 200,
@@ -296,7 +309,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     position: 'absolute',
-    top: 20,
+    top: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

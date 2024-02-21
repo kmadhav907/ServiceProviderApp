@@ -5,3 +5,4 @@ export const MAPROUTERSCREEN: string = 'MAPROUTERSCREEN';
 export const ETASCREEN: string = 'ETASCREEN';
 export const PROFILESCREEN: string = 'PROFILESCREEN';
 export const BILLINGSCREEN:string = 'BILLINGSCREEN';
+export const HISTORYSCREEN:string = 'HISTORYSCREEN'

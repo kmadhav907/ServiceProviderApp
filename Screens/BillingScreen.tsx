@@ -45,7 +45,6 @@ const BillingScreen = (props: BillingProps) => {
   }
 
   const handleSubmit = () => {
-    // Perform your submit logic here
     console.log('Bill Sent', { calculateTotal });
   };
   return (

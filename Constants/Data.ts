@@ -80,3 +80,79 @@ export const notifications = [
       "Description": "Car brake inspection"
     }
   ]
+
+
+  export const historyNotifications = [
+    [
+      {
+        "name": "John Doe",
+        "Service Type": "car",
+        "date": "2021-01-10",
+        // "amount": 50,
+        "flag": false
+      },
+      {
+        "name": "Jane Smith",
+        "Service Type": "bike",
+        "date": "2021-02-15",
+        "amount": 30,
+        "flag": true
+      },
+      {
+        "name": "Mike Johnson",
+        "Service Type": "car",
+        "date": "2021-03-20",
+        // "amount": 60,
+        "flag": false
+      },
+      {
+        "name": "Emily Davis",
+        "Service Type": "car",
+        "date": "2021-04-25",
+        "amount": 70,
+        "flag": true
+      },
+      {
+        "name": "Chris Wilson",
+        "Service Type": "bike",
+        "date": "2021-05-30",
+        "amount": 40,
+        "flag": true
+      },
+      {
+        "name": "Sarah Brown",
+        "Service Type": "car",
+        "date": "2021-06-05",
+        "amount": 80,
+        "flag": true
+      },
+      {
+        "name": "David Taylor",
+        "Service Type": "car",
+        "date": "2021-07-10",
+        // "amount": 90,
+        "flag": false
+      },
+      {
+        "name": "Olivia Clark",
+        "Service Type": "bike",
+        "date": "2021-08-15",
+        "amount": 50,
+        "flag": true
+      },
+      {
+        "name": "Andrew Martinez",
+        "Service Type": "car",
+        "date": "2021-09-20",
+        // "amount": 100,
+        "flag": false
+      },
+      {
+        "name": "Sophia Rodriguez",
+        "Service Type": "car",
+        "date": "2021-10-25",
+        "amount": 110,
+        "flag": true
+      }
+    ]
+  ]

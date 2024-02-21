@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 import globalStyles from '../Styles/globalStyles';
 import {black, blue, white, yellow} from '../Constants/ColorScheme';
@@ -15,6 +16,7 @@ import {navigateToRouteWithReset} from '../Utils/navigateTo';
 import {DASHBOARDSCREEN} from '../Constants/Navigations';
 import OTPField from '../Component/OTPField';
 import {requestLocationPermission} from '../Utils/requests';
+import {validatePhoneNumber} from '../Utils/global';
 
 interface LoginScreenProps {
   navigation: StackNavigationProp<ParamListBase, string>;
@@ -31,13 +33,20 @@ const LoginScreen = (props: LoginScreenProps) => {
   const [otpToVerify, setOtpToVerify] = useState<string>('');
 
   const handleLogin = () => {
-    setStepsForLogin(1);
+    console.log("Phone number:", phoneNumber); 
+    if(validatePhoneNumber(phoneNumber)){
+      setStepsForLogin(1);
+    }
+    else{
+      ToastAndroid.show('Invalid Phone Number',ToastAndroid.SHORT);
+    }
   };
   const handleOTP = async () => {
     setStepsForLogin(2);
     const locationPermissionGranted = await requestLocationPermission();
     if (locationPermissionGranted) {
       navigateToRouteWithReset(DASHBOARDSCREEN, props.navigation);
+      ToastAndroid.show('OTP Verified',ToastAndroid.SHORT);
     } else {
       Alert.alert(
         'Enable Location',
@@ -113,10 +122,10 @@ const LoginScreen = (props: LoginScreenProps) => {
               style={loginStyles.inputStyle}
               defaultValue={'+91'}
               keyboardType="phone-pad"
-              // onChangeText={(number: any) => {
-              //   this.setState({ phoneNumber: number });
-              //   console.log(this.state.phoneNumber);
-              // }}
+              onChangeText={(number) => {
+                setPhoneNumber(number);
+                // console.log(number);
+              }}
             />
             <TouchableOpacity
               style={loginStyles.buttonStyle}
