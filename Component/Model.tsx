@@ -1,12 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image } from 'react-native';
-import { WIDTH } from '../Constants/Dimensions';
-import { navigateToRouteWithoutReset } from '../Utils/navigateTo';
-import { DASHBOARDSCREEN, HISTORYSCREEN, PROFILESCREEN } from '../Constants/Navigations';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import {WIDTH} from '../Constants/Dimensions';
+import {navigateToRouteWithoutReset} from '../Utils/navigateTo';
+import {
+  DASHBOARDSCREEN,
+  HISTORYSCREEN,
+  PROFILESCREEN,
+} from '../Constants/Navigations';
 import Modal from 'react-native-modal';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { ParamListBase, NavigationContainerRef } from '@react-navigation/native';
-import { yellow } from '../Constants/ColorScheme';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {
+  ParamListBase,
+  NavigationContainerRef,
+  useRoute,
+} from '@react-navigation/native';
+import {yellow} from '../Constants/ColorScheme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 const splashViewImage = require('../Assets/SplashScreen.png');
 
@@ -21,30 +36,15 @@ const Model: React.FC<ModelProps> = ({
   toggleDrawer,
   navigation,
 }) => {
-  // const [historyClicked, setHistoryClicked] = useState(false);
-  // const [profileClicked, setProfileClicked] = useState(false);
-
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('state', () => {
-  //     // Reset state variables when navigation state changes
-  //     setHistoryClicked(false);
-  //     setProfileClicked(false);
-  //   });
-
-  //   return unsubscribe;
-  // }, [navigation]);
-
   const handleProfileClick = () => {
-    // setProfileClicked(true);
     navigateToRouteWithoutReset(PROFILESCREEN, navigation);
     toggleDrawer();
   };
-
-  const handleHistoryClick = () =>{
-    // setHistoryClicked(true);
+  const routerProperties = useRoute();
+  const handleHistoryClick = () => {
     navigateToRouteWithoutReset(HISTORYSCREEN, navigation);
     toggleDrawer();
-  }
+  };
 
   const handleIconClick = () => {
     navigation.pop();
@@ -72,7 +72,7 @@ const Model: React.FC<ModelProps> = ({
               {/* History */}
               <TouchableOpacity
                 onPress={handleHistoryClick}
-                // disabled={historyClicked}
+                disabled={routerProperties.name === HISTORYSCREEN}
                 style={drawerStyles.profileIconContainer}>
                 <Icon name="history" color={yellow} size={25} />
                 <Text style={drawerStyles.profileButton}>History</Text>
@@ -80,7 +80,7 @@ const Model: React.FC<ModelProps> = ({
               {/* Profile  */}
               <TouchableOpacity
                 onPress={handleProfileClick}
-                // disabled={profileClicked}
+                disabled={routerProperties.name === PROFILESCREEN}
                 style={drawerStyles.profileIconContainer}>
                 <Icon name="user" color={yellow} size={30} />
                 <Text style={drawerStyles.profileButton}>Profile</Text>

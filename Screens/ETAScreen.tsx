@@ -14,7 +14,6 @@ import Modal from 'react-native-modal';
 
 import Map from '../Component/Map';
 import Model from '../Component/Model';
-import {FIXIT_REACHED_TO_NOTIFICATION} from '../Constants/Status';
 
 interface ETAScreenProps {
   navigation: StackNavigationProp<ParamListBase, string>;
@@ -91,13 +90,7 @@ const ETAScreen = (props: ETAScreenProps) => {
   }, [currentNotification.etaTime]);
 
   const handleBillingScreen = () => {
-    // clearInterval(interval);
-    // setCurrentNotification({
-    //   ...currentNotification,
-    //   stepsToNavigate: BILLINGSCREEN,
-    //   fixitStatus: FIXIT_REACHED_TO_NOTIFICATION,
-    // });
-    navigateToRouteWithReset(BILLINGSCREEN,props.navigation)
+    navigateToRouteWithReset(BILLINGSCREEN, props.navigation);
   };
   return (
     <View style={[globalStyles.screenContainer, {backgroundColor: white}]}>
@@ -117,7 +110,9 @@ const ETAScreen = (props: ETAScreenProps) => {
         <Modal isVisible={showNextModal}>
           <View style={etaStyles.modalContent}>
             <Text style={etaStyles.modalTitle}>Do you want to continue?</Text>
-            <TouchableOpacity style={etaStyles.modalBtn} onPress={handleBillingScreen}>
+            <TouchableOpacity
+              style={etaStyles.modalBtn}
+              onPress={handleBillingScreen}>
               <Text style={etaStyles.modalSubText}>Proceed</Text>
             </TouchableOpacity>
           </View>

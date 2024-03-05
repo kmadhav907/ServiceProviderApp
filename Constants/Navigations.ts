@@ -6,3 +6,4 @@ export const ETASCREEN: string = 'ETASCREEN';
 export const PROFILESCREEN: string = 'PROFILESCREEN';
 export const BILLINGSCREEN:string = 'BILLINGSCREEN';
 export const HISTORYSCREEN:string = 'HISTORYSCREEN'
+export const FEEDBACKSCREEN:string = 'FEEDBACKSCREN';

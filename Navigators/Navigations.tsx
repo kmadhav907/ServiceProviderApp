@@ -13,11 +13,13 @@ import {
   PROFILESCREEN,
   BILLINGSCREEN,
   HISTORYSCREEN,
+  FEEDBACKSCREEN,
 } from '../Constants/Navigations';
 import {NavigationContainer, ParamListBase} from '@react-navigation/native';
 import ETAScreen from '../Screens/ETAScreen';
 import BillingScreen from '../Screens/BillingScreen';
 import HistoryScreen from '../Screens/HistoryScreen';
+import FeedbackScreen from '../Screens/FeedbackScreen';
 
 const Stack = createStackNavigator<ParamListBase>();
 
@@ -60,11 +62,15 @@ function Navigators() {
           component={BillingScreen}
           options={{headerShown: false}}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name={HISTORYSCREEN}
           component={HistoryScreen}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name={FEEDBACKSCREEN}
+          component={FeedbackScreen}
+          options={{headerShown: false}}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -16,6 +16,8 @@ import {navigateToRouteWithReset} from '../Utils/navigateTo';
 import {DASHBOARDSCREEN} from '../Constants/Navigations';
 import OTPField from '../Component/OTPField';
 import {requestLocationPermission} from '../Utils/requests';
+import {RESEND_OTP_TIMEOUT} from '../Constants/Genreal';
+import {LoginSteps} from '../Types/GeneralTypes';
 import {validatePhoneNumber} from '../Utils/global';
 
 interface LoginScreenProps {
@@ -25,28 +27,28 @@ interface LoginScreenProps {
 const LoginScreen = (props: LoginScreenProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [stepsForLogin, setStepsForLogin] = useState<number>(0);
-  const [otp, setOtp] = useState('');
-  const [timer, setTimer] = useState(30);
+  const [stepsForLogin, setStepsForLogin] = useState<number>(
+    LoginSteps.PHONE_NUMBER_INPUT,
+  );
+  const [otp, setOtp] = useState<string>('');
+  const [timer, setTimer] = useState<number>(RESEND_OTP_TIMEOUT);
   const [isTimerVisible, setIsTimerVisible] = useState(false);
   const [isResendDisabled, setIsResendDisabled] = useState(false);
   const [otpToVerify, setOtpToVerify] = useState<string>('');
 
   const handleLogin = () => {
-    console.log("Phone number:", phoneNumber); 
-    if(validatePhoneNumber(phoneNumber)){
-      setStepsForLogin(1);
-    }
-    else{
-      ToastAndroid.show('Invalid Phone Number',ToastAndroid.SHORT);
+    console.log('Phone number:', phoneNumber);
+    if (validatePhoneNumber(phoneNumber)) {
+      setStepsForLogin(LoginSteps.OTP_INPUT);
+    } else {
+      ToastAndroid.show('Invalid Phone Number', ToastAndroid.SHORT);
     }
   };
   const handleOTP = async () => {
-    setStepsForLogin(2);
     const locationPermissionGranted = await requestLocationPermission();
     if (locationPermissionGranted) {
       navigateToRouteWithReset(DASHBOARDSCREEN, props.navigation);
-      ToastAndroid.show('OTP Verified',ToastAndroid.SHORT);
+      ToastAndroid.show('OTP Verified', ToastAndroid.SHORT);
     } else {
       Alert.alert(
         'Enable Location',
@@ -122,7 +124,7 @@ const LoginScreen = (props: LoginScreenProps) => {
               style={loginStyles.inputStyle}
               defaultValue={'+91'}
               keyboardType="phone-pad"
-              onChangeText={(number) => {
+              onChangeText={number => {
                 setPhoneNumber(number);
                 // console.log(number);
               }}
@@ -141,7 +143,7 @@ const LoginScreen = (props: LoginScreenProps) => {
           <View style={[globalStyles.screenSection, loginStyles.loginSection]}>
             <Text style={loginStyles.titleTextStyle}>Enter the OTP</Text>
             <Text style={loginStyles.textStyle}>
-              We have sent an OTP to +91 999999999
+              We have sent an OTP to {phoneNumber}
             </Text>
             <OTPField
               otp={otpToVerify}

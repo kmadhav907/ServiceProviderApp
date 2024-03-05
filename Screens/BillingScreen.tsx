@@ -1,51 +1,64 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import globalStyles from '../Styles/globalStyles'
-import { ScrollView } from 'react-native-gesture-handler'
-import { HEIGHT, WIDTH } from '../Constants/Dimensions'
-import { StackNavigationProp } from '@react-navigation/stack'
-import { ParamListBase } from '@react-navigation/native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { black, blue, lightGray, red, yellow } from '../Constants/ColorScheme'
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import globalStyles from '../Styles/globalStyles';
+import {ScrollView} from 'react-native-gesture-handler';
+import {HEIGHT, WIDTH} from '../Constants/Dimensions';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {ParamListBase} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {black, blue, lightGray, red, yellow} from '../Constants/ColorScheme';
+import {ExpenseItem} from '../Types/GeneralTypes';
+import {PLATFORM_FEE} from '../Constants/Genreal';
 
 interface BillingProps {
   navigation: StackNavigationProp<ParamListBase, string>;
 }
 
 const BillingScreen = (props: BillingProps) => {
-
-  const [expenses, setExpenses] = useState([{ description: '', cost: '' }]);
-
+  const [expenses, setExpenses] = useState<ExpenseItem[]>([
+    {description: '', cost: ''},
+  ]);
   const onDelete = (index: number) => {
     const newExpenses = [...expenses];
     newExpenses.splice(index, 1);
     setExpenses(newExpenses);
   };
 
-  const onUpdate = (index: number, field: 'description' | 'cost', value: string) => {
+  const onUpdate = (
+    index: number,
+    field: 'description' | 'cost',
+    value: string,
+  ) => {
     const newExpenses = [...expenses];
     newExpenses[index][field] = value;
     setExpenses(newExpenses);
   };
 
   const onAddRow = () => {
-    setExpenses([...expenses, { description: '', cost: '' }]);
+    setExpenses([...expenses, {description: '', cost: ''}]);
   };
 
-  const calculateSubTotal = () => {
+  const CalculateSubTotal = () => {
     return expenses.reduce((total, expense) => {
       return total + (parseFloat(expense.cost) || 0);
     }, 0);
   };
 
-  const calculateTotal = () => {
-    const subTotal = calculateSubTotal();
-    const serviceCharge = subTotal * 0.05;
+  const CalculateTotal = () => {
+    const subTotal = CalculateSubTotal();
+    const serviceCharge = subTotal * PLATFORM_FEE;
     return subTotal + serviceCharge;
-  }
+  };
 
   const handleSubmit = () => {
-    console.log('Bill Sent', { calculateTotal });
+    // Perform your submit logic here
+    console.log('Bill Sent', {CalculateTotal});
   };
   return (
     <>
@@ -53,10 +66,8 @@ const BillingScreen = (props: BillingProps) => {
         <View style={billingStyles.headerTextContainer}>
           <Text style={billingStyles.headerText}>Towservice/Bike service</Text>
         </View>
-        <View style={[globalStyles.screenSection, billingStyles.billingSection]}>
-        {/* <View style={billingStyles.billTextContainer}>
-          <Text style={billingStyles.billText}>Bill</Text>
-        </View> */}
+        <View
+          style={[globalStyles.screenSection, billingStyles.billingSection]}>
           {expenses.map((expense, index: number) => (
             <View style={billingStyles.row} key={index}>
               <TouchableOpacity onPress={() => onDelete(index)}>
@@ -66,34 +77,42 @@ const BillingScreen = (props: BillingProps) => {
                 style={billingStyles.inputDescription}
                 placeholder="Description"
                 value={expense.description}
-                onChangeText={(text) => onUpdate(index, 'description', text)}
+                onChangeText={text => onUpdate(index, 'description', text)}
               />
               <TextInput
                 style={billingStyles.inputCost}
                 placeholder="Cost"
                 value={expense.cost}
-                onChangeText={(text) => onUpdate(index, 'cost', text)}
+                onChangeText={text => onUpdate(index, 'cost', text)}
                 keyboardType="numeric"
               />
             </View>
           ))}
 
-          <Text style={billingStyles.subTotal}>Sub Total: Rs {calculateSubTotal()}</Text>
+          <Text style={billingStyles.subTotal}>
+            Sub Total: Rs {<CalculateSubTotal />}
+          </Text>
           <Text style={billingStyles.serviceText}>Platform Fee : 5%</Text>
-          <Text style={billingStyles.total}>Total: Rs {calculateTotal()}</Text>
+          <Text style={billingStyles.total}>
+            Total: Rs {<CalculateTotal />}
+          </Text>
           <View style={billingStyles.buttonContainer}>
-            <TouchableOpacity style={billingStyles.buttonStyle} onPress={handleSubmit}>
+            <TouchableOpacity
+              style={billingStyles.buttonStyle}
+              onPress={handleSubmit}>
               <Text style={billingStyles.buttonTextStyle}>Send Bill</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={onAddRow} style={billingStyles.addRowButton}>
+            <TouchableOpacity
+              onPress={onAddRow}
+              style={billingStyles.addRowButton}>
               <Icon name="plus" color={blue} size={20} />
             </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
     </>
-  )
-}
+  );
+};
 
 const billingStyles = StyleSheet.create({
   billingSection: {
@@ -205,6 +224,6 @@ const billingStyles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 18,
   },
-})
+});
 
-export default BillingScreen
+export default BillingScreen;

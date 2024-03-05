@@ -9,6 +9,7 @@ import {
 import Navigators from './Navigators/Navigations';
 import CurrentNotificationContext from './Context/CurrentNotificationContext';
 import {NO_NOTIFICATION_SELECTED} from './Constants/Status';
+import FeedbackContext from './Context/FeedbackContext';
 
 const App = () => {
   const [currentNotification, setCurrentNotification] = useState({
@@ -17,6 +18,12 @@ const App = () => {
     longitude: 0,
     fixitStatus: NO_NOTIFICATION_SELECTED,
     etaTime: null,
+  });
+  const [feedback, setFeedback] = useState({
+    selectedFeedback: {},
+    name: '',
+    serviceType: '',
+    amount: -1,
   });
   return (
     <KeyboardAvoidingView
@@ -27,9 +34,12 @@ const App = () => {
           currentNotification,
           setCurrentNotification,
         }}>
-        <SafeAreaView style={styles.container}>
-          <Navigators />
-        </SafeAreaView>
+        <FeedbackContext.Provider
+          value={{feedback, setSelectedFeedback: setFeedback}}>
+          <SafeAreaView style={styles.container}>
+            <Navigators />
+          </SafeAreaView>
+        </FeedbackContext.Provider>
       </CurrentNotificationContext.Provider>
     </KeyboardAvoidingView>
   );
